@@ -1,32 +1,54 @@
-package sec01.ex01;
+package sec02.ex01;
 
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 public class MemberDAO {
+	// context.xml 파일에 <Resource> 태그를 이용해 톰캣 실행 시 연결할 데이터베이스를 설정
+	/*
 	private static final String driver = "oracle.jdbc.driver.OracleDriver";
 	private static final String url = "jdbc:oracle:thin:@localhost:1521:XE";
 	private static final String user = "scott";
 	private static final String pwd = "tiger";
-	private Connection con;
-	private Statement stmt;
+	*/
 	
+	private Connection con;
+	private PreparedStatement pstmt; 
+	private DataSource dataFactory; 	// 추가
+	
+	// 추가
+	public MemberDAO() {
+		try {
+			Context ctx = new InitialContext();
+			Context envContext = (Context) ctx.lookup("java:/comp/env");
+			dataFactory = (DataSource) envContext.lookup("jdbc/oracle");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public List<MemberVO> listMembers() {
-		// TODO Auto-generated method stub
 		List<MemberVO> list = new ArrayList<MemberVO>();
-			try
-		{
-			connDB();
-			String query = "select * from t_member";
+		try {
+			// connDB();
+			con=dataFactory.getConnection();		// 추가	
+			
+			String query = "select * from t_member ";
 			System.out.println(query);
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next())
-			{
+			
+			pstmt = con.prepareStatement(query);		// 추가	
+			ResultSet rs = pstmt.executeQuery(query);
+			
+			while (rs.next()) {
 				String id = rs.getString("id");
 				String pwd = rs.getString("pwd");
 				String name = rs.getString("name");
@@ -41,27 +63,25 @@ public class MemberDAO {
 				list.add(vo);
 			}
 			rs.close();
-			stmt.close();
+			pstmt.close();
 			con.close();
-		}catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
-	
+
+	// 데이터베이스 연결 기능 주석처리
+	/*   
 	private void connDB() {
-		try
-		{
+		try {
 			Class.forName(driver);
 			System.out.println("Oracle 드라이버 로딩 성공");
 			con = DriverManager.getConnection(url, user, pwd);
 			System.out.println("Connection 생성 성공");
-			stmt = con.createStatement();
-			System.out.println("Statement 생성 성공");
-	}catch (Exception e)
-		{
-		e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
+	*/
 }

@@ -1,8 +1,9 @@
-package sec01.ex01;
+package sec01.ex02;
 
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
@@ -14,7 +15,8 @@ public class MemberDAO {
 	private static final String user = "scott";
 	private static final String pwd = "tiger";
 	private Connection con;
-	private Statement stmt;
+	//private Statement stmt;
+	private PreparedStatement pstmt;
 	
 	public List<MemberVO> listMembers() {
 		// TODO Auto-generated method stub
@@ -23,8 +25,10 @@ public class MemberDAO {
 		{
 			connDB();
 			String query = "select * from t_member";
-			System.out.println(query);
-			ResultSet rs = stmt.executeQuery(query);
+			
+			System.out.println("prepareStatememt: "+query);
+			pstmt = con.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery(query);
 			while (rs.next())
 			{
 				String id = rs.getString("id");
@@ -41,7 +45,7 @@ public class MemberDAO {
 				list.add(vo);
 			}
 			rs.close();
-			stmt.close();
+			pstmt.close();
 			con.close();
 		}catch (Exception e)
 		{
@@ -57,8 +61,8 @@ public class MemberDAO {
 			System.out.println("Oracle 드라이버 로딩 성공");
 			con = DriverManager.getConnection(url, user, pwd);
 			System.out.println("Connection 생성 성공");
-			stmt = con.createStatement();
-			System.out.println("Statement 생성 성공");
+			//stmt = con.createStatement();
+			//System.out.println("Statement 생성 성공");
 	}catch (Exception e)
 		{
 		e.printStackTrace();

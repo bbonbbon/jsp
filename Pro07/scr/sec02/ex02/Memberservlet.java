@@ -1,4 +1,4 @@
-package sec01.ex01;
+package sec02.ex02;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Memberservlet
  */
-@WebServlet("/Memberservlet")
+@WebServlet("/Memberservlet4")
 public class Memberservlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
