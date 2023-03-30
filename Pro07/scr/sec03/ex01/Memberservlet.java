@@ -1,4 +1,4 @@
-package sec02.ex02;
+package sec03.ex01;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +15,7 @@ import sec02.ex01.MemberVO;
 /**
  * Servlet implementation class Memberservlet
  */
-@WebServlet("/Memberservlet4")
+@WebServlet("/Memberservlet5")
 public class Memberservlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ public class Memberservlet extends HttpServlet {
 		MemberDAO dao = new MemberDAO();
 		
 		String command = request.getParameter("command");
-		if (command !=null && command.equals("addMember"))
+		if (command != null && command.equals("addMember"))
 		{
 			String _id = request.getParameter("id");
 			String _pwd = request.getParameter("pwd");
@@ -63,12 +63,16 @@ public class Memberservlet extends HttpServlet {
 			vo.setName(_name);
 			vo.setEmail(_email);
 			dao.addMember(vo);
+		}else if (command != null && command.equals("delMember"))
+		{
+			String id = request.getParameter("id");
+			dao.delMember(id);
 		}
 		
 		List<MemberVO> list = dao.listMembers();
-		out.print("<htnl><body>");
+		out.print("<html><body>");
 		out.print("<table border=1><tr align='center' bgcolor='lightgreen'>");
-		out.print("<td>아이디</td><td>비밀번호</td><td>이름</td><td>이메일</td><td>가입일</td></tr>");
+		out.print("<td>아이디</td><td>비밀번호</td><td>이름</td><td>이메일</td><td>가입일</td><td>삭제</</tr>");
 		
 		for (int i = 0; i < list.size(); i++) {
 			MemberVO memberVO = (MemberVO) list.get(i);
@@ -77,7 +81,8 @@ public class Memberservlet extends HttpServlet {
 			String name = memberVO.getName();
 			String email = memberVO.getEmail();
 			Date joinDate = memberVO.getJoinDate();
-			out.print("<tr><td>" + id + "</td><td>" + pwd + "</td><td>" + name + "</td><td>" + email + "</td><td>" + joinDate + "</td><tr>");
+			out.print("<tr><td>" + id + "</td><td>" + pwd + "</td><td>" + name + "</td><td>" + email + "</td><td>" + joinDate + "</td><td>" 
+			+ "<a href='/Pro7/member5?command=del<e,ber&id=" + id + "'>삭제 </a></td></tr>");
 			}
 		out.print("</table><body></html>");
 		out.print("<a href='/Pro7/memberfrom.html'>새 회원 등록하기 </a>");

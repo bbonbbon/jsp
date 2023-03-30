@@ -1,4 +1,4 @@
-package sec02.ex02;
+package sec03.ex01;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -82,15 +82,30 @@ public class MemberDAO {
 			String name = membervo.getName();
 			String email = membervo.getEmail();
 			
-			String qurey = "insert into t_member";
-			qurey += "(id,pwd,name,email)";
-			qurey += "values(?,?,?,?)";
-			System.out.println("prepareStatememt: " + qurey);
-			pstmt = con.prepareStatement(qurey);
+			String query = "insert into t_member";
+			query += "(id,pwd,name,email)";
+			query += "values(?,?,?,?)";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, id);
 			pstmt.setString(2, pwd);
 			pstmt.setString(3, name);
 			pstmt.setString(4, email);
+			pstmt.executeUpdate();
+			pstmt.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void delMember(String id) {
+		try
+		{
+			con = dataFactory.getConnection();
+			
+			String query = "delete from t_member" + "where id=?";
+			System.out.println("prepareStatememt:" + query);
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, id);
 			pstmt.executeUpdate();
 			pstmt.close();
 		}catch (Exception e) {
